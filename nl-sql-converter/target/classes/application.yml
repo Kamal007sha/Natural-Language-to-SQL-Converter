@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: nl-sql-converter
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/nlsql_db
+    username: postgres
+    password: kamal
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    com.nlsql: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+nlsql:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:mock-key}
+      model: gpt-3.5-turbo
+  query:
+    max-results: 1000
+    timeout: 30

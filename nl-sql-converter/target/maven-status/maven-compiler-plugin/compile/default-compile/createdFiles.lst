@@ -1,0 +1,15 @@
+com\nlsql\model\TableInfo.class
+com\nlsql\service\NLSQLConverterService.class
+com\nlsql\controller\NLSQLController.class
+com\nlsql\model\ParsedQuery$QueryType.class
+com\nlsql\model\ParsedQuery.class
+com\nlsql\config\OpenAIConfig.class
+com\nlsql\service\NLSQLConverterService$1.class
+com\nlsql\util\StringUtils.class
+com\nlsql\model\QueryRequest.class
+com\nlsql\service\DatabaseSchemaService.class
+com\nlsql\service\QueryExecutionService.class
+com\nlsql\model\QueryResponse.class
+com\nlsql\service\NLPProcessorService.class
+com\nlsql\model\TableInfo$ColumnInfo.class
+com\nlsql\NLSQLConverterApplication.class

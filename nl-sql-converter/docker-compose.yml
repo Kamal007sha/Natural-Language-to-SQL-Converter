@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: nlsql-postgres
+    environment:
+      POSTGRES_DB: nlsql_db
+      POSTGRES_USER: nlsql_user
+      POSTGRES_PASSWORD: nlsql_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nlsql_user -d nlsql_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nlsql-network
+
+  nlsql-app:
+    build: .
+    container_name: nlsql-converter
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/nlsql_db
+      SPRING_DATASOURCE_USERNAME: nlsql_user
+      SPRING_DATASOURCE_PASSWORD: nlsql_password
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-mock-key}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/query/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - nlsql-network
+
+volumes:
+  postgres_data:
+
+networks:
+  nlsql-network:
+    driver: bridge
